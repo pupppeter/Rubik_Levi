@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>3D Rubik kocka</title>
+<style>
+  body { margin:0; overflow:hidden; }
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/js/controls/OrbitControls.js"></script>
+<script>
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // OrbitControls
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  camera.position.set(6,6,6);
+  controls.update();
+
+  // Rubik-kocka színek (fehér, sárga, piros, narancs, zöld, kék)
+  const colors = [0xffffff, 0xffff00, 0xff0000, 0xffa500, 0x00ff00, 0x0000ff];
+
+  // Anyag generáló minden oldalhoz más színnel
+  function createMaterials() {
+    return [
+      new THREE.MeshBasicMaterial({color: colors[0]}), // X+
+      new THREE.MeshBasicMaterial({color: colors[1]}), // X-
+      new THREE.MeshBasicMaterial({color: colors[2]}), // Y+
+      new THREE.MeshBasicMaterial({color: colors[3]}), // Y-
+      new THREE.MeshBasicMaterial({color: colors[4]}), // Z+
+      new THREE.MeshBasicMaterial({color: colors[5]}), // Z-
+    ];
+  }
+
+  // 27 kis kocka létrehozása
+  const cubes = [];
+  const offset = 1.05; // kis rés, hogy látszódjanak a kockák
+  for (let x=-1; x<=1; x++) {
+    for (let y=-1; y<=1; y++) {
+      for (let z=-1; z<=1; z++) {
+        const geometry = new THREE.BoxGeometry(1,1,1);
+        const materials = createMaterials();
+        const cubelet = new THREE.Mesh(geometry, materials);
+        cubelet.position.set(x*offset, y*offset, z*offset);
+        scene.add(cubelet);
+        cubes.push(cubelet);
+      }
+    }
+  }
+
+  // Fény hozzáadása
+  const light = new THREE.AmbientLight(0xffffff, 0.8);
+  scene.add(light);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  dirLight.position.set(5,5,5);
+  scene.add(dirLight);
+
+  // Animáció
+  function animate(){
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Ablakméretezés
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+</body>
+</html>
