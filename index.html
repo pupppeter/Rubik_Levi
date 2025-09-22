@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Rubik-kocka játék</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.5em;
+      color: lime;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rubik-kocka szimulátor</h1>
+  <canvas id="cubeCanvas"></canvas>
+  <div id="message">🎉 Gratulálok, a jelszó: <b>TITOK123</b></div>
+
+  <script src="https://cdn.jsdelivr.net/gh/kenrick95/cubejs/cube.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/iamkun/dayjs/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/kenrick95/cube3d/cube3d.min.js"></script>
+
+  <script>
+    // Rubik kocka 3D vászon
+    const canvas = document.getElementById("cubeCanvas");
+    canvas.width = window.innerWidth * 0.8;
+    canvas.height = window.innerHeight * 0.7;
+
+    const cube3d = new Cube3D(canvas);
+
+    // Ha a kocka kirakódik -> üzenet
+    function checkSolved() {
+      if (cube3d.cube.isSolved()) {
+        document.getElementById("message").style.display = "block";
+      }
+    }
+
+    // Ellenőrzés minden mozdulat után
+    cube3d.cube.addMoveListener(checkSolved);
+  </script>
+</body>
+</html>
