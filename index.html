@@ -1,78 +1,70 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>3D Rubik kocka</title>
-<style>
-  body { margin:0; overflow:hidden; }
-</style>
+  <meta charset="utf-8" />
+  <title>Rubik Cube</title>
+  <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans+SC' rel='stylesheet' type='text/css'>
+  <link href="style.css" rel="stylesheet">
+
 </head>
+
 <body>
-<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r146/examples/js/controls/OrbitControls.js"></script>
-<script>
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
 
-  // OrbitControls
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  camera.position.set(6,6,6);
-  controls.update();
+  <a href="https://github.com/jwhitfieldseed/rubik-js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 
-  // Rubik-kocka színek (fehér, sárga, piros, narancs, zöld, kék)
-  const colors = [0xffffff, 0xffff00, 0xff0000, 0xffa500, 0x00ff00, 0x0000ff];
+  <ul id="controls">
+    <li><a href="#shuffle" id="button-shuffle">Shuffle</a></li>
+    <li><a href="#solve" id="button-solve">Solve</a></li>
+    <li><a href="#undo" id="button-undo">Undo</a></li>
+    <li><a href="#reset" id="button-reset">Reset</a></li>
+    <li>
+      <label>Size</label>
+      <select id="select-size">
+        <option value="3">3x3</option>
+        <option value="4">4x4</option>
+        <option value="5">5x5</option>
+        <!-- we can go bigger but it gets unwieldy! -->
+      </select>
+    </li>
+  </ul>
 
-  // Anyag generáló minden oldalhoz más színnel
-  function createMaterials() {
-    return [
-      new THREE.MeshBasicMaterial({color: colors[0]}), // X+
-      new THREE.MeshBasicMaterial({color: colors[1]}), // X-
-      new THREE.MeshBasicMaterial({color: colors[2]}), // Y+
-      new THREE.MeshBasicMaterial({color: colors[3]}), // Y-
-      new THREE.MeshBasicMaterial({color: colors[4]}), // Z+
-      new THREE.MeshBasicMaterial({color: colors[5]}), // Z-
-    ];
-  }
+  <div id="scene"></div>
 
-  // 27 kis kocka létrehozása
-  const cubes = [];
-  const offset = 1.05; // kis rés, hogy látszódjanak a kockák
-  for (let x=-1; x<=1; x++) {
-    for (let y=-1; y<=1; y++) {
-      for (let z=-1; z<=1; z++) {
-        const geometry = new THREE.BoxGeometry(1,1,1);
-        const materials = createMaterials();
-        const cubelet = new THREE.Mesh(geometry, materials);
-        cubelet.position.set(x*offset, y*offset, z*offset);
-        scene.add(cubelet);
-        cubes.push(cubelet);
-      }
-    }
-  }
+  <p id="info">
+    Built with <a href="http://threejs.org">Three.js</a> by <a href="https://github.com/jwhitfieldseed ">Joe Whitfield-Seed </a> 2013.
+  </p>
 
-  // Fény hozzáadása
-  const light = new THREE.AmbientLight(0xffffff, 0.8);
-  scene.add(light);
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  dirLight.position.set(5,5,5);
-  scene.add(dirLight);
+  <script src="lib/jquery-2.0.3.js"></script>
+  <script src="lib/three.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+  <script src='lib/threex.domevent.js'></script>
+  <script src='lib/threex.domevent.object3d.js'></script>
 
-  // Animáció
-  function animate(){
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-  }
-  animate();
+  <script src="rubik.js"></script>
+  <script>
 
-  // Ablakméretezés
-  window.addEventListener('resize', ()=>{
-    camera.aspect = window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>
+    $(function() {
+      function init(dimensions) {
+        dimensions = +(dimensions) || 3;
+
+        var element = $("#scene").empty();
+        var rubik = new Rubik(element, dimensions);
+
+        $("#button-shuffle").on('click', function(e) { e.preventDefault(); rubik.shuffle() });
+        $("#button-solve").on('click', function(e) { e.preventDefault(); rubik.solve(); });
+        $("#button-undo").on('click', function(e) { e.preventDefault(); rubik.undo(); });
+        $("#button-reset").on('click', function(e) { e.preventDefault(); init(); });        
+        $("#select-size").on('change', function() { init($(this).val()) });        
+      };
+
+      init();
+
+      
+    });
+
+  </script>
+
 </body>
+
 </html>
