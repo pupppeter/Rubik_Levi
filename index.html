@@ -2,7 +2,7 @@
 <html lang="hu">
 <head>
   <meta charset="UTF-8">
-  <title>Rubik-kocka játék</title>
+  <title>Rubik-kocka szimulátor</title>
   <style>
     body {
       margin: 0;
@@ -17,34 +17,33 @@
       color: lime;
       display: none;
     }
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
   </style>
 </head>
 <body>
   <h1>Rubik-kocka szimulátor</h1>
-  <canvas id="cubeCanvas"></canvas>
+  <canvas id="cube"></canvas>
   <div id="message">🎉 Gratulálok, a jelszó: <b>TITOK123</b></div>
 
-  <script src="https://cdn.jsdelivr.net/gh/kenrick95/cubejs/cube.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/iamkun/dayjs/dayjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/kenrick95/cube3d/cube3d.min.js"></script>
+  <!-- Rubik kocka könyvtár -->
+  <script src="https://cdn.jsdelivr.net/npm/rubicube@2.0.3/dist/rubicube.min.js"></script>
 
   <script>
-    // Rubik kocka 3D vászon
-    const canvas = document.getElementById("cubeCanvas");
-    canvas.width = window.innerWidth * 0.8;
+    const canvas = document.getElementById("cube");
+    canvas.width = window.innerWidth * 0.7;
     canvas.height = window.innerHeight * 0.7;
 
-    const cube3d = new Cube3D(canvas);
+    const cube = new Rubicube.Cube(canvas);
 
-    // Ha a kocka kirakódik -> üzenet
-    function checkSolved() {
-      if (cube3d.cube.isSolved()) {
+    // Ellenőrizzük minden mozdulat után
+    cube.on('move', () => {
+      if (cube.isSolved()) {
         document.getElementById("message").style.display = "block";
       }
-    }
-
-    // Ellenőrzés minden mozdulat után
-    cube3d.cube.addMoveListener(checkSolved);
+    });
   </script>
 </body>
 </html>
