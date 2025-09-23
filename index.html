@@ -19,47 +19,54 @@
     <li><a href="#reset" id="button-reset">Reset</a></li>
   </ul>
 
-  <div id="menu">
 
+<div class="container">
+  <div class="section">
+    <img src="Star-Wars-cosplay-ray-KalinkaFox-6045036.jpg" alt="Első kép">
+  </div>
+  <div class="section" id="rubik-container">
+    <!-- Rubik kocka ide -->
+  </div>
+  <div class="section">
+    <img src="Star-Wars-fandoms-mandalorian-5648265.jpg" alt="Második kép">
+  </div>
 </div>
 
-  <div id="scene"></div>
-
   <p id="info">
-    Boldog 18. születésnapot Fákó Leventének! 
+    Boldog 18. születésnapot Fákó Leventének!
   </p>
 
-  <script src="lib/jquery-2.0.3.js"></script>
-  <script src="lib/three.js"></script>
-  <script src="lib/OrbitControls.js"></script>
-  <script src='lib/threex.domevent.js'></script>
-  <script src='lib/threex.domevent.object3d.js'></script>
+<!-- A Rubik kocka és gombok működéséhez szükséges script-ek -->
+<script src="lib/jquery-2.0.3.js"></script>
+<script src="lib/three.js"></script>
+<script src="lib/OrbitControls.js"></script>
+<script src='lib/threex.domevent.js'></script>
+<script src='lib/threex.domevent.object3d.js'></script>
+<script src="rubik.js"></script>
 
-  <script src="rubik.js"></script>
-  <script>
+<!-- Itt jön a módosított JS, hogy a Rubik kocka a középső részbe kerüljön -->
+<script>
+$(function() {
+  function init(dimensions) {
+    dimensions = +(dimensions) || 3;
 
-    $(function() {
-      function init(dimensions) {
-        dimensions = +(dimensions) || 3;
+    // A középső section a Rubik kockának
+    var element = $("#rubik-container").empty();
+    var rubik = new Rubik(element, dimensions);
+    rubik.shuffle();
 
-        var element = $("#scene").empty();
-        var rubik = new Rubik(element, dimensions);
-        rubik.shuffle()
+    // Gombok kezelése
+    $("#button-shuffle").off('click').on('click', function(e){ e.preventDefault(); rubik.shuffle(); });
+    $("#button-solve").off('click').on('click', function(e){ e.preventDefault(); rubik.solve(); });
+    $("#button-undo").off('click').on('click', function(e){ e.preventDefault(); rubik.undo(); });
+    $("#button-reset").off('click').on('click', function(e){ e.preventDefault(); init(); });
 
-        $("#button-shuffle").on('click', function(e) { e.preventDefault(); rubik.shuffle() });
-        $("#button-solve").on('click', function(e) { e.preventDefault(); rubik.solve(); });
-        $("#button-undo").on('click', function(e) { e.preventDefault(); rubik.undo(); });
-        $("#button-reset").on('click', function(e) { e.preventDefault(); init(); });        
-        $("#select-size").on('change', function() { init($(this).val()) });        
-      };
+    // Ha van méretválasztó (opcionális)
+    $("#select-size").off('change').on('change', function() { init($(this).val()); });
+  }
 
-      init();
-
-      
-    });
-
-  </script>
-
+  init();
+});
+</script>
 </body>
-
 </html>

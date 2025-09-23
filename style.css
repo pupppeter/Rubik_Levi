@@ -1,104 +1,138 @@
+/* Alap beállítások */
 html, body {
-	height: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Alegreya Sans SC', sans-serif;
+  color: black;
+  background: url("20250827_111403.jpg") no-repeat center center fixed;
+  background-size: cover;
 }
 
-body { 
-	margin: 0; 
-	overflow: hidden; 
-	background: url("20250827_111403.jpg");
-	background-size: cover;   /* kitölti a képernyőt */
-	font-family: 'Alegreya Sans SC';
-	color: #eee;
+/* Három részre osztás */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;  /* az egész ablakot kitölti */
 }
 
+.section {
+  flex: 1; /* mindhárom rész egyforma széles */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;      /* a szöveg is középre */
+  position: relative;
+}
+
+
+#rubik-container {
+  width: 100%;
+  height: 100%;
+}
+
+.section img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+/* Információs szöveg alul */
 #info {
-	position: absolute;
-	bottom: 0;
-	margin: 10px;
+  position: absolute;
+  bottom: 0;
+  margin: 10px;
 }
 
-{
-	color: #ff7600;
-	text-decoration: none;
-}
-
-#controls { 
-	position: absolute;
-	top: 0;
-	list-style-type: none;
-	margin: 5px;
-	padding: 0;
-	max-width: 70%;
-
+/* Menü gombok tetején */
+#controls {
+  position: absolute;
+  top: 0;
+  list-style-type: none;
+  margin: 5px;
+  padding: 0;
+  max-width: 70%;
+  display: flex;
+  z-index: 100;
 }
 
 #controls > li {
-	margin: 0 5px;
-	padding: 0;
-	float: left;
+  margin: 0 5px;
+  padding: 0;
+  float: left;
 }
 
 #controls > li:after {
-	content: '~';
-	color: #999;
+  content: '~';
+  color: #999;
 }
 
 #controls > li:last-child:after {
-	content: none;
+  content: none;
 }
 
 #controls > li a, #controls > li label {
-	margin-right: 10px;
-	font-size: 1.2em;
-	color: #eee;
-	line-height: 2em;
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: #eee;
+  line-height: 2em;
 }
 
 #controls > li select {
-	color: #333;
-	font-size: 1em;
+  color: #333;
+  font-size: 1em;
 }
 
 #controls > li a:hover {
-	color: #ff7600;
+  color: #ff7600;
 }
 
-#scene { 
-	height: 100%;
-}
-
+/* Menü panel */
 #menu {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    display: flex;
-    flex-direction: column;  /* függőleges elrendezés */
-    gap: 8px;
-    z-index: 10;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
 }
 
 #menu button {
-    width: 100px;
-    padding: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    transition: background-color 0.2s;
+  width: 100px;
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: red;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: background-color 0.2s;
 }
 
 #menu button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
-/* Az új forgatógombok kinézete is ugyanaz marad */
+/* Forgató gombok */
 #rotation-controls button {
-    background-color: #2196F3;
+  background-color: #2196F3;
 }
 
 #rotation-controls button:hover {
-    background-color: #1976D2;
+  background-color: #1976D2;
+}
+
+/* Nyeremény overlay */
+#nyeremeny {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  font-weight: bold;
+  color: yellow;
+  text-shadow: 2px 2px 5px black;
+  z-index: 999;
 }

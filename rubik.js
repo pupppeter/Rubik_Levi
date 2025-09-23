@@ -417,6 +417,8 @@ function Rubik(element, dimensions, background) {
     //A naive solver - step backwards through all completed steps
     solve: function() {
       if(!isMoving) {
+        var solved;
+
         completedMoveStack.forEach(function(move) {
           pushMove(move.cube, move.vector, move.axis, move.direction * -1);
         });
@@ -429,6 +431,7 @@ function Rubik(element, dimensions, background) {
         });
 
         startNextMove();
+
       }
     },
 
@@ -452,3 +455,7 @@ function Rubik(element, dimensions, background) {
   }
 }
 
+
+function showPrize() {
+  document.getElementById('nyeremeny').style.display = 'block';
+}
