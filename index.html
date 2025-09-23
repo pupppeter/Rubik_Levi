@@ -44,6 +44,7 @@
 
         var element = $("#scene").empty();
         var rubik = new Rubik(element, dimensions);
+        rubik.shuffle()
 
         $("#button-shuffle").on('click', function(e) { e.preventDefault(); rubik.shuffle() });
         $("#button-solve").on('click', function(e) { e.preventDefault(); rubik.solve(); });
