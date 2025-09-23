@@ -5,18 +5,19 @@ html, body {
 body { 
 	margin: 0; 
 	overflow: hidden; 
-	background-color: #303030;
+	background: url("20250827_111403.jpg");
+	background-size: cover;   /* kitölti a képernyőt */
 	font-family: 'Alegreya Sans SC';
 	color: #eee;
 }
 
-p#info {
+#info {
 	position: absolute;
 	bottom: 0;
 	margin: 10px;
 }
 
-a {
+{
 	color: #ff7600;
 	text-decoration: none;
 }
@@ -64,4 +65,40 @@ a {
 
 #scene { 
 	height: 100%;
+}
+
+#menu {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;  /* függőleges elrendezés */
+    gap: 8px;
+    z-index: 10;
+}
+
+#menu button {
+    width: 100px;
+    padding: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: background-color 0.2s;
+}
+
+#menu button:hover {
+    background-color: #45a049;
+}
+
+/* Az új forgatógombok kinézete is ugyanaz marad */
+#rotation-controls button {
+    background-color: #2196F3;
+}
+
+#rotation-controls button:hover {
+    background-color: #1976D2;
 }
