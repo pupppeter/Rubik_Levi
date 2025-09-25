@@ -716,9 +716,10 @@ function showPrize(videoUrl) {
       });
     }
 
-    // 👇 Amikor a videó elindul, időzített üzenetek
+    let zsombiTimeout, szabolcsTimeout;
+
     videoEl.addEventListener("play", function() {
-      // Zsombi üzenet 70 mp után
+      // Zsombi üzenet 60 mp után
       setTimeout(() => {
         if (!document.getElementById("zsombi-message")) {
           var msg = document.createElement("div");
@@ -728,14 +729,14 @@ function showPrize(videoUrl) {
           document.body.appendChild(msg);
 
           // automatikus eltűnés 8 mp után
-          setTimeout(() => {
-            msg.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-            msg.style.opacity = "0";
-            msg.style.transform = "translateX(-50%) translateY(40px)";
-            setTimeout(() => msg.remove(), 800);
-          }, 8000);
-        }
-      }, 70000);
+            setTimeout(() => {
+              msg.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+              msg.style.opacity = "0";
+              msg.style.transform = "translateX(-50%) translateY(40px)";
+              setTimeout(() => msg.remove(), 800);
+            }, 8000);
+          }
+      }, 60000);
 
       // Szabolcs üzenet 100 mp után
       setTimeout(() => {
@@ -746,6 +747,7 @@ function showPrize(videoUrl) {
           msg2.textContent = "Szabolcs, you're watching this illegally. But I think you have better links than this :)";
           document.body.appendChild(msg2);
 
+          // automatikus eltűnés 10 mp után
           setTimeout(() => {
             msg2.style.transition = "opacity 0.6s ease, transform 0.6s ease";
             msg2.style.opacity = "0";
@@ -754,9 +756,7 @@ function showPrize(videoUrl) {
           }, 10000);
         }
       }, 100000);
-
     });
-
     // 👇 Videó vége → Star Wars szöveg crawl
     videoEl.addEventListener("ended", function() {
       var videoWrap = modal.querySelector(".video-wrap");

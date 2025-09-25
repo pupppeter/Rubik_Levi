@@ -137,28 +137,3 @@ html, body {
   z-index: 999;
 }
 
-/* Szabolcs üzenet doboz */
-#szabolcs-message {
-  position: fixed;
-  left: 50%;
-  top: 33%; /* felső harmad alsó része */
-  transform: translateX(-50%) translateY(0);
-  background-color: yellow;
-  color: black;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 15px 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  z-index: 2000;
-  text-align: center;
-  line-height: 1.4;
-  white-space: pre-line; /* hogy a \n sortörés működjön */
-  animation: slideDown 10s linear forwards;
-}
-
-/* Folyamatos lecsúszás animáció */
-@keyframes slideDown {
-  from { transform: translateX(-50%) translateY(0); }
-  to   { transform: translateX(-50%) translateY(80px); }
-}
