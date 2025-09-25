@@ -202,6 +202,76 @@ function Rubik(element, dimensions, background) {
       maxExtent = (cubeSize * dimensions + spacing * (dimensions - 1)) / 2, 
       allCubes = [];
 
+  function checkSolvedByScreenshot() {
+    // 1. render
+    renderer.render(scene, camera);
+
+    // 2. ideiglenes 2D canvas
+    var canvas = renderer.domElement;
+    var tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    var ctx = tempCanvas.getContext('2d');
+
+    // 3. kép beolvasása
+    var imgData = canvas.toDataURL();
+    var img = new Image();
+    img.onload = function() {
+        ctx.drawImage(img, 0, 0);
+
+        // 4. pixeladatok kivágása (pl. középső harmad)
+        var startX = canvas.width / 3;
+        var startY = canvas.height / 3;
+        var width = canvas.width / 3;
+        var height = canvas.height / 3;
+        var imageData = ctx.getImageData(startX, startY, width, height);
+        var data = imageData.data;
+
+        // 5. ismert színek
+        var knownColors = [
+            {r: 196, g: 30, b: 58},   // piros 0xC41E3A
+            {r: 0, g: 158, b: 96},    // zöld 0x009E60
+            {r: 0, g: 81, b: 186},    // kék 0x0051BA
+            {r: 255, g: 88, b: 0},    // narancs 0xFF5800
+            {r: 255, g: 213, b: 0},   // sárga 0xFFD500
+            {r: 255, g: 255, b: 255}, // fehér 0xFFFFFF
+            {r: 48, g: 48, b: 48}     // háttér 0x303030
+        ];
+
+        // 6. helper: legközelebbi szín keresése
+        function closestColor(r, g, b) {
+            let minDist = Infinity;
+            let closest = null;
+            for (let c of knownColors) {
+                let dist = Math.pow(c.r - r, 2) + Math.pow(c.g - g, 2) + Math.pow(c.b - b, 2);
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = `${c.r},${c.g},${c.b}`;
+                }
+            }
+            return closest;
+        }
+
+        // 7. összegyűjtés
+        var colors = new Set();
+        for (var i = 0; i < data.length; i += 4) {
+            var r = data[i], g = data[i+1], b = data[i+2];
+            var col = closestColor(r, g, b);
+            colors.add(col);
+        }
+
+        console.log("Talált színek:", colors);
+
+        if (colors.size <= 4) { // 6 kockaszín + háttér
+            console.log("A Rubik kocka kész!");
+            showPrize(); // ha akarod a nyereményt
+        }
+    };
+
+    img.src = imgData;
+  }
+
+
   function newCube(x, y, z) {
     var cubeGeometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize);
     var cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
@@ -359,6 +429,12 @@ function Rubik(element, dimensions, background) {
 
     moveEvents.trigger('complete');
 
+    // Ellenőrzés a kirakottságra
+    if(checkSolvedByScreenshot()) {
+        console.log("A Rubik kocka kész!");
+        showPrize(); // ha szeretnéd megjeleníteni a nyereményt
+    }
+
     //Are there any more queued moves?
     startNextMove();
   }
@@ -404,7 +480,7 @@ function Rubik(element, dimensions, background) {
         return allCubes[i];
       }
 
-      var nMoves = randomInt(10, 40);
+      var nMoves = randomInt(1, 2);
       for(var i = 0; i < nMoves; i ++) {
         //TODO: don't reselect the same axis?
         var cube = randomCube();
@@ -457,5 +533,6 @@ function Rubik(element, dimensions, background) {
 
 
 function showPrize() {
-  document.getElementById('nyeremeny').style.display = 'block';
+  alert("Buksisimi");
 }
+
