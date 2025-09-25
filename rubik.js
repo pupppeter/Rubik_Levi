@@ -532,7 +532,127 @@ function Rubik(element, dimensions, background) {
 }
 
 
+/*
 function showPrize() {
-  alert("Buksisimi");
+  //alert("Buksisimi");
+  alert("https://www.pornhub.com/view_video.php?viewkey=64fe027320120")  
+}
+*/
+
+
+function showPrize(videoUrl) {
+  // Példa fallback: ha nincs megadva URL, a repo főoldalra vezető link jelenik meg
+  var defaultLink = "https://github.com/pupppeter/rubik_levi";
+  var url = videoUrl || defaultLink;
+  url = "https://raw.githubusercontent.com/pupppeter/rubik_levi/main/Strip_80.mp4"
+
+  // Ha már van nyitva popup, ne duplikáljuk
+  if (document.getElementById("prize-popup-overlay")) return;
+
+  // Stílus (egyszer rakjuk be)
+  if (!document.getElementById("prize-popup-style")) {
+    var style = document.createElement("style");
+    style.id = "prize-popup-style";
+    style.innerHTML = `
+      #prize-popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 240ms ease;
+      }
+      #prize-popup-modal {
+        background: #111;
+        border-radius: 12px;
+        padding: 18px;
+        max-width: 90vw;
+        max-height: 85vh;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+        transform: scale(0.85);
+        animation: popIn 420ms cubic-bezier(.2,.8,.2,1) forwards;
+        color: #fff;
+      }
+      #prize-popup-modal .title { font-size: 18px; margin-bottom: 8px; text-align:center; }
+      #prize-video { display:block; max-width: 80vw; max-height: 60vh; width: 720px; height: auto; border-radius: 8px; background: #000; }
+      #prize-popup-modal .actions { margin-top: 10px; text-align:center; }
+      .prize-btn {
+        display: inline-block; padding: 8px 14px; border-radius: 8px; text-decoration:none; font-weight:600;
+        background: linear-gradient(90deg,#0051BA,#00A3FF); color:#fff;
+      }
+      .prize-close {
+        position: absolute; right: 16px; top: 14px; background:transparent; border: none; color: #fff; font-size:20px; cursor:pointer;
+      }
+
+      @keyframes popIn {
+        0% { transform: scale(0.85) translateY(8px); opacity: 0; }
+        60% { transform: scale(1.05) translateY(-6px); opacity: 1; }
+        100% { transform: scale(1) translateY(0); opacity: 1; }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0 } to { opacity: 1 }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Overlay + modal
+  var overlay = document.createElement("div");
+  overlay.id = "prize-popup-overlay";
+
+  var modal = document.createElement("div");
+  modal.id = "prize-popup-modal";
+  modal.innerHTML = `
+    <button class="prize-close" aria-label="Bezárás">&times;</button>
+    <div class="title">🎉 Gratulálok — győzelem! 🎉</div>
+    <div class="video-wrap">
+      <video id="prize-video" controls playsinline preload="metadata">
+        <source src="${url}" type="video/mp4">
+        A böngésződ nem támogatja a beágyazott videót. <a href="${url}" target="_blank" rel="noopener noreferrer">Megnyitás</a>
+      </video>
+    </div>
+    <div class="actions">
+      <a class="prize-btn" href="${url}" target="_blank" rel="noopener noreferrer">Megnyitás új lapon / Letöltés</a>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Close: kattintás kívülre, close gomb, ESC
+  overlay.addEventListener("click", function(e) {
+    if (e.target === overlay) removePopup();
+  });
+  modal.querySelector(".prize-close").addEventListener("click", removePopup);
+  document.addEventListener("keydown", onEsc);
+
+  function onEsc(e) {
+    if (e.key === "Escape") removePopup();
+  }
+
+  function removePopup() {
+    document.removeEventListener("keydown", onEsc);
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  }
+
+  // Próbáljuk automatikusan elindítani (böngészők gyakran blokkolják a hanggal történő autoplay-t)
+  var videoEl = modal.querySelector("#prize-video");
+  if (videoEl) {
+    // Autoplay-hoz sok böngésző engedi, ha a videó némított
+    videoEl.muted = true;
+    var playPromise = videoEl.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function(err) {
+        // autoplay blokkolva — a felhasználónak kattintania kell
+        // marad a controls + "Megnyitás új lapon" gomb
+        console.log("Autoplay blocked or not allowed:", err);
+      }).then(function() {
+        // Ha sikerült játszani, majd visszaállíthatjuk a némítást, ha szeretnéd:
+        // videoEl.muted = false; // <-- csak akkor állítsd vissza, ha biztosan kellett
+      });
+    }
+  }
 }
 
