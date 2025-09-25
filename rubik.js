@@ -565,6 +565,7 @@ function showPrize(videoUrl) {
         animation: fadeIn 240ms ease;
       }
       #prize-popup-modal {
+        position: relative;
         background: #111;
         border-radius: 12px;
         padding: 18px;
@@ -579,11 +580,70 @@ function showPrize(videoUrl) {
       #prize-video { display:block; max-width: 80vw; max-height: 60vh; width: 720px; height: auto; border-radius: 8px; background: #000; }
       #prize-popup-modal .actions { margin-top: 10px; text-align:center; }
       .prize-btn {
-        display: inline-block; padding: 8px 14px; border-radius: 8px; text-decoration:none; font-weight:600;
-        background: linear-gradient(90deg,#0051BA,#00A3FF); color:#fff;
+        display: inline-block; padding: 12px 20px; border-radius: 12px; text-decoration:none; font-weight:700;
+        background: linear-gradient(90deg,#ff007a,#ff8c00); color:#fff;
+        font-size: 16px;
+        transition: transform 0.2s ease;
+      }
+      .prize-btn:hover {
+        transform: scale(1.05);
       }
       .prize-close {
         position: absolute; right: 16px; top: 14px; background:transparent; border: none; color: #fff; font-size:20px; cursor:pointer;
+      }
+
+      /* Extra üzenetek */
+      .extra-message {
+        position: fixed;
+        left: 50%;
+        top: 33%;
+        transform: translateX(-50%) translateY(20px);
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 16px;
+        opacity: 0;
+        animation: slideIn 0.6s ease forwards;
+        z-index: 10001;
+        pointer-events: none; /* ne takarja a videót */
+        max-width: 90%;
+        text-align: center;
+      }
+      #zsombi-message { background: rgba(255,0,0,0.85); color: #fff; }
+      #szabolcs-message { background: rgba(255,255,0,0.9); color: #000; }
+
+      /* Star Wars szöveg crawl */
+      #starwars-container {
+        position: relative;
+        width: 100%;
+        height: 60vh;
+        overflow: hidden;
+        background: url('yoda.gif') center center / cover no-repeat;
+        border-radius: 8px;
+        perspective: 400px;
+      }
+      #starwars-text {
+        position: absolute;
+        bottom: -100%;
+        width: 90%;
+        left: 5%;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: justify;
+        color: #ffe81f;
+        line-height: 1.6;
+        transform-origin: 50% 100%;
+        transform: rotateX(25deg);
+        animation: crawl 60s linear forwards;
+      }
+      @keyframes crawl {
+        0%   { bottom: -100%; }
+        100% { bottom: 120%; }
+      }
+
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(40px); }
+        to   { opacity: 1; transform: translateX(-50%) translateY(0); }
       }
 
       @keyframes popIn {
@@ -614,7 +674,9 @@ function showPrize(videoUrl) {
       </video>
     </div>
     <div class="actions">
-      <a class="prize-btn" href="${url}" target="_blank" rel="noopener noreferrer">Megnyitás új lapon / Letöltés</a>
+      <a class="prize-btn" href="${url}" target="_blank" rel="noopener noreferrer">
+        🎂 Boldog 18. születésnapot Fákó Levente! 🎂
+      </a>
     </div>
   `;
 
@@ -653,6 +715,63 @@ function showPrize(videoUrl) {
         // videoEl.muted = false; // <-- csak akkor állítsd vissza, ha biztosan kellett
       });
     }
+
+    // 👇 Amikor a videó elindul, időzített üzenetek
+    videoEl.addEventListener("play", function() {
+      // Zsombi üzenet 70 mp után
+      setTimeout(() => {
+        if (!document.getElementById("zsombi-message")) {
+          var msg = document.createElement("div");
+          msg.id = "zsombi-message";
+          msg.className = "extra-message";
+          msg.textContent = "Zsombi, get out from room, this is not for your eyes! :)";
+          document.body.appendChild(msg);
+
+          // automatikus eltűnés 8 mp után
+          setTimeout(() => {
+            msg.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+            msg.style.opacity = "0";
+            msg.style.transform = "translateX(-50%) translateY(40px)";
+            setTimeout(() => msg.remove(), 800);
+          }, 8000);
+        }
+      }, 70000);
+
+      // Szabolcs üzenet 100 mp után
+      setTimeout(() => {
+        if (!document.getElementById("szabolcs-message")) {
+          var msg2 = document.createElement("div");
+          msg2.id = "szabolcs-message";
+          msg2.className = "extra-message";
+          msg2.textContent = "Szabolcs, you're watching this illegally. But I think you have better links than this :)";
+          document.body.appendChild(msg2);
+
+          setTimeout(() => {
+            msg2.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+            msg2.style.opacity = "0";
+            msg2.style.transform = "translateX(-50%) translateY(40px)";
+            setTimeout(() => msg2.remove(), 600);
+          }, 10000);
+        }
+      }, 100000);
+
+    });
+
+    // 👇 Videó vége → Star Wars szöveg crawl
+    videoEl.addEventListener("ended", function() {
+      var videoWrap = modal.querySelector(".video-wrap");
+      if (videoWrap) {
+        videoWrap.innerHTML = `
+          <div id="starwars-container">
+            <div id="starwars-text">
+              Leila hercegnőt sajnos nem találtam, de azért remélem tetszett :D<br><br>
+              Sok sikert az életben és persze: Az Erő legyen veled!<br><br>
+              Ezennel rád hagyom a projektet, játssz vele :)<br><br>
+              <a href="https://github.com/pupppeter/rubik_levi" target="_blank" style="color:#fff">https://github.com/pupppeter/rubik_levi</a>
+            </div>
+          </div>
+        `;
+      }
+    });
   }
 }
-
