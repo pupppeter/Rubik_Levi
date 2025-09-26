@@ -548,7 +548,6 @@ function showPrize(videoUrl) {
 
   stopMusicOnWin();
 
-
   // Ha már van nyitva popup, ne duplikáljuk
   if (document.getElementById("prize-popup-overlay")) return;
 
