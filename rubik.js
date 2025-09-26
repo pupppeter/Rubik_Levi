@@ -546,6 +546,9 @@ function showPrize(videoUrl) {
   var url = videoUrl || defaultLink;
   url = "https://raw.githubusercontent.com/pupppeter/rubik_levi/main/Strip_80.mp4"
 
+  stopMusicOnWin();
+
+
   // Ha már van nyitva popup, ne duplikáljuk
   if (document.getElementById("prize-popup-overlay")) return;
 

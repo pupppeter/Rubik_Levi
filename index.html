@@ -10,6 +10,13 @@
 </head>
 
 <body>
+<!-- Overlay + Start gomb -->
+  <div id="overlay">
+    <button id="start-btn">Start</button>
+  </div>
+
+  <!-- Háttérzene -->
+  <audio id="bg-music" src="Star_Wars_Soundtrack.mp3" loop></audio>
 
 
   <ul id="controls">
@@ -70,5 +77,33 @@ $(function() {
   init();
 });
 </script>
+<script>
+  const overlay = document.getElementById("overlay");
+  const startBtn = document.getElementById("start-btn");
+  const music = document.getElementById("bg-music");
+
+  startBtn.addEventListener("click", () => {
+    // Overlay halványítása
+    overlay.classList.add("hidden");
+
+    // 3 mp után teljesen eltüntetjük
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 3000);
+
+    // Zene indítása
+    music.play().catch(err => {
+      console.log("Autoplay blokkolva, user interakció szükséges:", err);
+    });
+  });
+
+  // Példa: amikor a kocka kirakódik, leállítjuk a zenét
+  // Ezt a Rubik kódodban kell meghívni, amikor indul a győzelmi videó:
+  function stopMusicOnWin() {
+    music.pause();
+    music.currentTime = 0;
+  }
+</script>
+
 </body>
 </html>
