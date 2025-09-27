@@ -62,7 +62,7 @@ html, body {
 }
 
 #controls > li:after {
-  content: '~';
+  content: '';
   color: #999;
 }
 
@@ -168,4 +168,31 @@ html, body {
 
 #start-btn:hover {
   transform: scale(1.1);
+}
+
+
+
+
+#button-shuffle,
+#button-solve,
+#button-reset {
+  display: none !important;
+}
+
+#button-shuffle,
+#button-solve,
+#button-reset {
+  display: none !important;
+}
+
+/* A linkek szülő LI elemének eltüntetése */
+#button-shuffle,
+#button-solve,
+#button-reset {
+  display: none !important;
+}
+#button-shuffle, 
+#button-solve, 
+#button-reset {
+  display: none !important;
 }
